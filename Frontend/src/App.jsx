@@ -16,6 +16,10 @@ function App() {
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const totalPosts = posts.length;
+  const captionedPosts = posts.filter((post) => post.caption?.trim()).length;
+  const selectedImageName = imageFile?.name ?? 'No image selected';
+
   useEffect(() => {
     let isMounted = true;
 
@@ -197,17 +201,57 @@ function App() {
 
   return (
     <main className="shell">
+      <div className="ambient-glow ambient-glow-one" aria-hidden="true" />
+      <div className="ambient-glow ambient-glow-two" aria-hidden="true" />
+      <div className="grid-overlay" aria-hidden="true" />
+
       <section className="hero-panel">
         <div className="hero-copy">
-          <p className="eyebrow">Image Post Studio</p>
-          <h1>Turn your tested backend into a working creator dashboard.</h1>
+          <p className="eyebrow">Creative Post Studio</p>
+          <h1>Make your image-post frontend feel like a polished launch-ready product.</h1>
           <p className="hero-text">
-            This frontend talks to your Express API, uploads an image with a caption,
-            updates captions with patch, deletes posts, and renders the saved feed.
+            Your backend already does the heavy lifting. This refreshed interface turns it
+            into a cleaner publishing experience with better hierarchy, warmer visuals, and
+            a feed that feels more alive.
           </p>
+
+          <div className="hero-pills">
+            <span className="hero-pill">Upload images</span>
+            <span className="hero-pill">Edit captions</span>
+            <span className="hero-pill">Delete posts</span>
+          </div>
         </div>
 
-        <div className="hero-stats">
+        <div className="hero-side">
+          <div className="hero-stats">
+            <div className="stat-card featured">
+              <span className="stat-label">Frontend scope</span>
+              <strong>UI only refresh</strong>
+              <p>No backend routes or logic changed.</p>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Posts loaded</span>
+              <strong>{String(totalPosts).padStart(2, '0')}</strong>
+            </div>
+            <div className="stat-card">
+              <span className="stat-label">Caption coverage</span>
+              <strong>
+                {totalPosts === 0 ? '0%' : `${Math.round((captionedPosts / totalPosts) * 100)}%`}
+              </strong>
+            </div>
+          </div>
+
+          <div className="hero-note">
+            <p className="hero-note-title">Workflow</p>
+            <ul className="hero-list">
+              <li>Create a post with image + caption.</li>
+              <li>Preview before upload.</li>
+              <li>Update or remove any saved card.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="hero-summary">
           <div className="stat-card">
             <span className="stat-label">Create endpoint</span>
             <strong>POST /create-post</strong>
@@ -222,8 +266,22 @@ function App() {
       <section className="workspace">
         <form className="composer-card" onSubmit={handleSubmit}>
           <div className="section-heading">
-            <p className="section-kicker">New post</p>
-            <h2>Upload an image and publish it</h2>
+            <p className="section-kicker">Compose</p>
+            <h2>Create a post with a stronger presentation</h2>
+            <p className="section-subtext">
+              Add a caption, attach an image, and publish straight into the live feed.
+            </p>
+          </div>
+
+          <div className="composer-strip">
+            <div>
+              <span className="mini-label">Selected file</span>
+              <strong>{selectedImageName}</strong>
+            </div>
+            <div>
+              <span className="mini-label">Feed size</span>
+              <strong>{totalPosts} posts</strong>
+            </div>
           </div>
 
           <label className="field">
@@ -237,17 +295,19 @@ function App() {
           </label>
 
           <label className="upload-zone">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
-            />
+            <span className="upload-kicker">Image upload</span>
             <span className="upload-title">
-              {imageFile ? imageFile.name : 'Choose an image'}
+              {imageFile ? 'Image ready to publish' : 'Choose a file for your next post'}
             </span>
             <span className="upload-hint">
               Your backend expects the field name <code>image</code>.
             </span>
+            <input
+              className="upload-input"
+              type="file"
+              accept="image/*"
+              onChange={(event) => setImageFile(event.target.files?.[0] ?? null)}
+            />
           </label>
 
           {previewUrl ? (
@@ -256,22 +316,35 @@ function App() {
             </div>
           ) : (
             <div className="preview-placeholder">
-              Image preview will appear here before upload.
+              <p>Image preview will appear here before upload.</p>
+              <span>Pick a strong visual and it will show up instantly.</span>
             </div>
           )}
 
           {error ? <p className="feedback error">{error}</p> : null}
           {successMessage ? <p className="feedback success">{successMessage}</p> : null}
 
-          <button className="publish-button" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Publishing...' : 'Publish post'}
-          </button>
+          <div className="composer-footer">
+            <button className="publish-button" type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Publishing...' : 'Publish post'}
+            </button>
+          </div>
         </form>
 
         <section className="feed-card">
-          <div className="section-heading">
-            <p className="section-kicker">Live feed</p>
-            <h2>Posts loaded from your backend</h2>
+          <div className="feed-heading">
+            <div className="section-heading">
+              <p className="section-kicker">Live feed</p>
+              <h2>Posts loaded from your backend</h2>
+              <p className="section-subtext">
+                Every card here is rendered from your API response in real time.
+              </p>
+            </div>
+
+            <div className="feed-badges">
+              <span className="count-pill">{totalPosts} total</span>
+              <span className="count-pill muted">{isLoading ? 'Syncing' : 'Ready'}</span>
+            </div>
           </div>
 
           {isLoading ? <p className="status-text">Loading posts...</p> : null}
@@ -279,17 +352,22 @@ function App() {
           {!isLoading && posts.length === 0 ? (
             <div className="empty-state">
               <p>No posts yet.</p>
-              <span>Create one from the form and it will appear here.</span>
+              <span>Create one from the form and it will appear here with the new card design.</span>
             </div>
           ) : null}
 
           <div className="post-grid">
-            {posts.map((post) => {
+            {posts.map((post, index) => {
               const isEditing = editingPostId === post._id;
               const isBusy = pendingActionId === post._id;
 
               return (
                 <article className="post-card" key={post._id || `${post.Image}-${post.caption}`}>
+                  <div className="post-topline">
+                    <span className="post-index">Post {String(index + 1).padStart(2, '0')}</span>
+                    <span className="post-status">Live</span>
+                  </div>
+
                   <div className="post-media">
                     <img src={post.Image} alt={post.caption || 'Uploaded post'} />
                   </div>
@@ -334,7 +412,7 @@ function App() {
                             onClick={() => startEditing(post)}
                             disabled={isBusy}
                           >
-                            Edit caption
+                            Edit
                           </button>
                           <button
                             className="action-button danger"
