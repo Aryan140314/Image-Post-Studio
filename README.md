@@ -2,6 +2,8 @@
 
 Image-Post-Studio is a full-stack image posting project with a React frontend and an Express backend. Users can upload an image with a caption, preview it before publishing, view all posts, edit captions, and delete posts. Images are uploaded to ImageKit and post data is stored in MongoDB.
 
+The frontend now includes a more polished dashboard-style interface with a stronger hero section, live feed stats, glass-style cards, improved upload and preview areas, and a more attractive responsive layout without changing any backend functionality.
+
 ## Tech Stack
 
 ### Frontend
@@ -33,7 +35,9 @@ Image-Post-Studio is a full-stack image posting project with a React frontend an
 - API integration using the Fetch API
 - Inline image preview with `URL.createObjectURL()`
 - Conditional rendering for loading, empty state, success, and error UI
-- Responsive UI layout with custom CSS
+- Responsive dashboard-style UI with custom CSS gradients, glass panels, and card layouts
+- Live frontend-only stats for total posts, caption coverage, and selected file state
+- Enhanced upload zone, preview card, feed badges, and post card styling
 - Vite proxy setup for local backend communication
 
 ### Backend Techniques
@@ -53,8 +57,18 @@ Image-Post-Studio is a full-stack image posting project with a React frontend an
 - Fetch and display all posts
 - Update an existing post caption
 - Delete a post
+- View posts inside a redesigned responsive creator dashboard
+- See frontend-only post stats and selected file details
 - Store uploaded image URLs in MongoDB
 - Connect frontend and backend in local development with Vite proxy
+
+## Frontend Refresh Highlights
+
+- New landing-style hero section with feature pills and backend endpoint summary
+- Redesigned composer panel with selected file info and stronger upload UI
+- Improved image preview state before publishing
+- Refined live feed with status badges, numbered cards, and cleaner edit/delete actions
+- Better visual hierarchy, typography, spacing, and mobile responsiveness
 
 ## Project Structure
 
@@ -94,7 +108,7 @@ Image-Post-Studio/
 2. The Express backend receives the file using `multer`.
 3. The image buffer is uploaded to ImageKit.
 4. The returned image URL and caption are saved in MongoDB.
-5. The frontend fetches the saved posts and displays them in the dashboard.
+5. The frontend fetches the saved posts and displays them in the redesigned dashboard feed.
 
 ## API Endpoints
 
@@ -185,12 +199,14 @@ http://localhost:5173
 - After creating a post, the new post is added to the top of the feed.
 - Users can edit a caption inline.
 - Users can delete any existing post from the feed.
+- The interface also shows live frontend-only details such as selected file name, post count, and caption coverage.
 
 ## Notes
 
 - `Backend/.env` is ignored from GitHub.
 - `node_modules` and frontend build files are ignored from GitHub.
 - The local frontend proxy is configured in `Frontend/vite.config.js`.
+- The frontend redesign only changes `Frontend/src/App.jsx`, `Frontend/src/App.css`, and `Frontend/src/index.css`.
 
 ## Future Improvements
 
